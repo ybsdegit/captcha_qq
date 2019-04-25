@@ -11,4 +11,4 @@
 
 https://github.com/ybsdegit/captcha_qq/blob/master/captcha_qq.py
 ## 结果展示
-![头像](https://github.com/ybsdegit/captcha_qq/blob/master/result/result.gif)
+![结果](https://github.com/ybsdegit/captcha_qq/blob/master/result/result.gif)
