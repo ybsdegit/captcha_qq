@@ -71,6 +71,17 @@ class Login(object):
         """
         WebDriverWait(dri, 10, 5).until(lambda dr: element).click()
 
+    def is_element_exist(self, value):
+        flag = True
+        browser = self.driver
+        try:
+            browser.find_element_by_xpath(value)
+            return flag
+
+        except:
+            flag = False
+            return flag
+
     @staticmethod
     def get_postion(chunk, canves):
         """
@@ -168,17 +179,9 @@ class Login(object):
 
     def login_main(self, driver):
 
-        # ssl._create_default_https_context = ssl._create_unverified_context
+        driver.switch_to.default_content()
+        driver.switch_to.frame(driver.find_element_by_id('tcaptcha_iframe'))  # switch 到 滑块frame
 
-        # click_keyi_username = driver.find_element_by_xpath("//div[@class='wp-onb-tit']/a[text()='可疑用户']")
-        # self.webdriverwait_click(driver, click_keyi_username)
-        #
-        # login_button = driver.find_element_by_id('code')
-        # self.webdriverwait_click(driver, login_button)
-        # time.sleep(1)
-
-        # driver.switch_to.frame(driver.find_element_by_id('tcaptcha_iframe'))  # switch 到 滑块frame
-        # time.sleep(0.5)
         bk_block = driver.find_element_by_xpath('//img[@id="slideBg"]')  # 大图
         web_image_width = bk_block.size
         web_image_width = web_image_width['width']
@@ -209,19 +212,13 @@ class Login(object):
         # print('第二步,拖动元素')
         for track in track_list:
             ActionChains(driver).move_by_offset(xoffset=track, yoffset=0).perform()  # 鼠标移动到距离当前位置（x,y）
-            time.sleep(0.002)
-        # ActionChains(driver).move_by_offset(xoffset=-random.randint(0, 1), yoffset=0).perform()   # 微调，根据实际情况微调
+            time.sleep(random.randint(1, 10) * 0.001)
+        ActionChains(driver).move_by_offset(xoffset=-random.randint(0, 1), yoffset=0).perform()   # 微调，根据实际情况微调
 
         # print('第三步,释放鼠标')
         ActionChains(driver).release(on_element=slid_ing).perform()
-        time.sleep(1)
 
-        print('登录成功')
-        # self.after_quit()
-        # driver.switch_to.default_content()
-        result = driver.find_element_by_xpath('//*[@id="tcaptcha_trigger_text_init"]')
-        # value = result.text()
-        # print(value)
+
 
     def main(self):
         driver = self.driver
@@ -230,13 +227,23 @@ class Login(object):
         vcode = driver.find_element_by_id('vcode')
         self.webdriverwait_click(driver, vcode)
         time.sleep(1)
-        driver.switch_to.frame(driver.find_element_by_id('tcaptcha_iframe'))  # switch 到 滑块frame
+
+
         time.sleep(0.5)
         for i in range(20):
             self.login_main(driver)
+            time.sleep(3)
+            driver.switch_to.default_content()
+            driver.switch_to.frame(driver.find_element_by_xpath('//*[@id="loading_animation"]/iframe'))  # switch 到 滑块frame
+            flag = self.is_element_exist("//div/div/p[text()='验证成功']")
+            print(flag)
 
-
+            if flag:
+                print('Success')
+                break
+                # self.after_quit()
+            else:
+                print('Failed')
 if __name__ == '__main__':
-    phone = "****"
     login = Login()
     login.main()
