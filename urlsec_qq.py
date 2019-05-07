@@ -36,6 +36,7 @@ class Login(object):
         self.url = "https://urlsec.qq.com/report.html"
         self.option = ChromeOptions()
         self.option.add_argument('--user-agent=Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30')
+        self.option.add_argument(r'--user-data-dir=C:\Users\admin\AppData\Local\Google\Chrome\User Data')
         # self.option.add_argument('--disable-extensions')
         # self.option.add_argument('--profile-directory=Default')
         # self.option.add_argument("--incognito")
@@ -214,11 +215,10 @@ class Login(object):
             ActionChains(driver).move_by_offset(xoffset=track, yoffset=0).perform()  # 鼠标移动到距离当前位置（x,y）
             time.sleep(random.randint(1, 10) * 0.001)
         ActionChains(driver).move_by_offset(xoffset=-random.randint(0, 1), yoffset=0).perform()   # 微调，根据实际情况微调
-
+        ActionChains(self.driver).move_by_offset(xoffset=-2, yoffset=0).perform()
+        ActionChains(self.driver).move_by_offset(xoffset=2, yoffset=0).perform()
         # print('第三步,释放鼠标')
         ActionChains(driver).release(on_element=slid_ing).perform()
-
-
 
     def main(self):
         driver = self.driver
@@ -227,7 +227,6 @@ class Login(object):
         vcode = driver.find_element_by_id('vcode')
         self.webdriverwait_click(driver, vcode)
         time.sleep(1)
-
 
         time.sleep(0.5)
         for i in range(20):
@@ -239,11 +238,13 @@ class Login(object):
             print(flag)
 
             if flag:
-                print('Success')
+                print('Login is Success')
                 break
                 # self.after_quit()
             else:
-                print('Failed')
+                print('Login is Failed, Again')
+
+
 if __name__ == '__main__':
     login = Login()
     login.main()
